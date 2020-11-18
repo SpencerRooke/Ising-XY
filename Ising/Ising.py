@@ -8,7 +8,7 @@ cl.PYOPENCL_COMPILER_OUTPUT=1
 class Ising: #initializes offset lattices A,B for d dimensional cubic ising problem (size N^d)
     
     def __init__(self,N,J,dimension=2, oclString = "Ising.cl"):
-        self.N, self.J = N,J 
+        self.N, self.J = N,J*2 
         self.D = dimension
         self.rng = np.random.default_rng()
         self.context = cl.create_some_context()
@@ -102,7 +102,7 @@ class Ising2D(Ising):
         Writer = animation.writers['ffmpeg']
         writer = Writer(fps=FPS, metadata=dict(artist='Me'), bitrate=12800)
         im_ani.save('out.mp4', writer=writer)
-
+        
 ##############################################################################
 class Ising3D(Ising):#make sure to invoke with dimension=3 and oclString = "Ising_3.cl"
     
@@ -125,28 +125,5 @@ class Ising3D(Ising):#make sure to invoke with dimension=3 and oclString = "Isin
         else:
             cl.enqueue_copy(queu,B,mem_B)
     
-    def combine():pass #not needed if not plotting
     #The visualizations with matplotlib for 3D weren't great, so I got rid of animate here
-    #TODO: Revisit with OpenGL for visualization
-        
-##############################################################################
-Tau = 1 
-N = 512
-ising = Ising2D(10,J=2)
-
-pArray = []
-tArray = []
-
-#for k in range(1024):ising.compare((k%2)*1,1.5)
-for i in range(64):
-    temp = 3-i*1.5/64
-    tArray=tArray+[temp]
-    #equilibriate. Should already be close from previous state
-    for j in range(512):ising.compare((j%2)*1,temp)
-    pArray = pArray + [ising.mag()]
-
-fig1=plt.figure(figsize=(32,32))
-fig1.tight_layout()
-ax=fig1.gca()
-ax.plot(tArray,np.abs(pArray))
-
+    #TODO: Revisit with OpenGL for visualization    

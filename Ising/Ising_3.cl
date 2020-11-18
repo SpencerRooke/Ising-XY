@@ -54,11 +54,37 @@ __kernel void Magnetization //np.sum is probably just as fast
     unsigned int i = get_global_id(0);
     if(i<N*N/2){
         comp = comp+A[i]+B[i];
-   //int Mag = comp;
+    Mag = comp;
     }
 }
 
-//TODO: Energy Kernel
+__kernel void Energy 
+(__global int* A, __global int* B, __global int* Energy, const unsigned int N)
+{
+    int comp = 0;
+    unsigned int i = get_global_id(0);
+    unsigned int j = get_global_id(1);
+    
+    if(i<N/2 && j<N){
+    	for (int k = 0; j<N; j++){
+    	comp = comp + -1*A[id(i,j,k,N)] * 
+    	(B[id(i,j+1,k,N)]               + 
+	    ((j+k)%2==0) * B[id(i,j,k,N)]   + 
+    	((j+k)%2==1) * B[id(i+1,j,k,N)] +
+    	B[id(i,j,k+1,N)]);
+    	
+    	comp = comp + -1*B[id(i,j,k,N)] * 
+    	(A[id(i,j+1,k,N)]               + 
+	    ((j+k)%2==0) * A[id(i+1,j,k,N)] + 
+        ((j+k)%2==1) * A[id(i,j,k,N)]	+
+        A[id(i,j,k+1,N)]);
+    	}
+    
+    comp = comp/4;
+    Energy = comp;
+    //factor here may be wrong
+    }
+}
 
 
 

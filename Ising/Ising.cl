@@ -61,12 +61,15 @@ __kernel void Energy //Calculate the Energy of a Configuration
     
     if(i<N/2){
     	for (int j = 0; j<N; j++){
-    	comp = comp + -1*A[id(i,j,N)] * (B[id(i,j+1,N)] + B[id(i,j,N)]);
-    	comp = comp + -1*B[id(i,j,N)] * (A[id(i,j+1,N)] + A[id(i+1,j,N)]);	
+    	comp = comp + -1*A[id(i,j,N)] 
+    	* (B[id(i,j+1,N)] + (j%2==0)*B[id(i,j,N)] + (j%2==1)*B[id(i+1,j,N)]);
+    	comp = comp + -1*B[id(i,j,N)] 
+    	* (A[id(i,j+1,N)] + (j%2==0)*A[id(i+1,j,N)] + (j%2==1)*A[id(i,j,N)]);	
     	}
     
     comp = comp/2;
     Energy = comp;
+    //factor may be wrong, need to check
     }
 }
 
