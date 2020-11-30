@@ -52,7 +52,7 @@ __kernel void Magnetization //Find the Magnetization of a configuration. Likely 
     }
 }
 
-__kernel void Energy //Calculate the Energy of a Configuration
+__kernel void Energy //Calculate the Energy of a Configuration. TODO: Need to test
 (__global int* A, __global int* B, __global int* Energy, const unsigned int N)
 {
     int comp = 0;

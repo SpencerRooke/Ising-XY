@@ -104,7 +104,7 @@ class Ising2D(Ising):
         im_ani.save('out.mp4', writer=writer)
         
 ##############################################################################
-class Ising3D(Ising):#make sure to invoke with dimension=3 and oclString = "Ising_3.cl"
+class Ising3D(Ising):#invoke with J=2, dimension=3, and oclString = "Ising_3.cl"
     
     def compare(self,which=0,Tau=0):
         A,B,mem_A,mem_B = self.A, self.B, self.mem_A, self.mem_B
@@ -125,5 +125,7 @@ class Ising3D(Ising):#make sure to invoke with dimension=3 and oclString = "Isin
         else:
             cl.enqueue_copy(queu,B,mem_B)
     
-    #The visualizations with matplotlib for 3D weren't great, so I got rid of animate here
+    #TODO: fix the 3D kernel
     #TODO: Revisit with OpenGL for visualization    
+    
+    

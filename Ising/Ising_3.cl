@@ -1,5 +1,6 @@
 #define id(i,j,k,N) ( (((i)%(N/2))*N)*N + ((j)%N)*N + ((k)%N) )
 
+//TODO: Doesn't work, probably an index problem
 __kernel void Update
 (__global int* A, __global int* B, __global float* rand, const unsigned int N,int which, float comp_one)
 {
@@ -17,12 +18,12 @@ __kernel void Update
     		comp_ijk = B[id(i,j,k,N)] +
     		B[id(i,j+1,k,N)] + B[id(i,j-1,k,N)] +
     		B[id(i,j,k+1,N)] + B[id(i,j,k-1,N)] +
-    		((j+k)%2==0) * B[id(i-1,j,k,N)] + 
-    		((j+k)%2==1) * B[id(i+1,j,k,N)];   		
+    		((j+k)%2==1) * B[id(i-1,j,k,N)] + 
+    		((j+k)%2==0) * B[id(i+1,j,k,N)];   		
     		
             comp_ijk = A[id(i,j,k,N)]*comp_ijk;
             
-            tempVal = 0 + (comp_ijk == 2)*comp_one + (comp_ijk == 4)*comp_two + (comp_ijk == 4)*comp_three;
+            tempVal = 0 + (comp_ijk == 2)*comp_one + (comp_ijk == 4)*comp_two + (comp_ijk == 6)*comp_three;
             //Below may change
             A[id(i,j,k,N)] = (-2*(tempVal == 0 || tempVal > rand[id(i,j,k,N)]) + 1) * A[id(i,j,k,N)]; 
     		}
@@ -34,12 +35,12 @@ __kernel void Update
     		comp_ijk = A[id(i,j,k,N)] +
     		A[id(i,j+1,k,N)] + A[id(i,j-1,k,N)] +
     		A[id(i,j,k+1,N)] + A[id(i,j,k-1,N)] +
-    		((j+k)%2==0) * A[id(i+1,j,k,N)] + 
-    		((j+k)%2==1) * A[id(i-1,j,k,N)];   		
+    		((j+k)%2==1) * A[id(i+1,j,k,N)] + 
+    		((j+k)%2==0) * A[id(i-1,j,k,N)];   		
     		
             comp_ijk = B[id(i,j,k,N)]*comp_ijk;
             
-            tempVal = 0 + (comp_ijk == 2)*comp_one + (comp_ijk == 4)*comp_two + (comp_ijk == 4)*comp_three;
+            tempVal = 0 + (comp_ijk == 2)*comp_one + (comp_ijk == 4)*comp_two + (comp_ijk == 6)*comp_three;
             //Below may change
             B[id(i,j,k,N)] = (-2*(tempVal == 0 || tempVal > rand[id(i,j,k,N)]) + 1) * B[id(i,j,k,N)]; 
     		}
